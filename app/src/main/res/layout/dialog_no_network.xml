@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+    <TextView
+        android:id="@+id/errTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="150dp"
+        android:minHeight="50dp"
+        android:text="哎呀，网络似乎没连上，请检查一下再试试"
+        android:textSize="15sp"
+        android:textColor="#FFFFFFFF"
+        android:background="@drawable/bg_no_network_dialog"
+        android:paddingLeft="26dp"
+        android:paddingRight="26dp"
+        android:paddingTop="9dp"
+        android:paddingBottom="9dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:gravity="center"/>
+</LinearLayout>

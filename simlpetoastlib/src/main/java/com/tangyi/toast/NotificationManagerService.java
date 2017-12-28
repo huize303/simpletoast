@@ -3,9 +3,11 @@ package com.tangyi.toast;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.PixelFormat;
+import android.os.Binder;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewCompat;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -22,7 +24,7 @@ import java.util.List;
  */
 
 public class NotificationManagerService {
-    private static int MAXSIZE = 10;
+    private static int MAXSIZE = 50;
 
     public static final int LONG_DELAY = 3500;
     public static final int SHORT_DELAY = 2000; // 2 seconds
@@ -154,20 +156,47 @@ public class NotificationManagerService {
             if (windowAnimations != -1) {
                 params.windowAnimations = windowAnimations;
             }
-
-            int y = getReflactField("com.android.internal.R$dimen", "toast_y_offset");
-            if (y == -1) {
-                params.y = dpToPixel(toast.context, 64);
-            } else {
-                params.y = toast.context.getResources().getDimensionPixelOffset(y);
+            if(toast.mX != -1) {
+                params.x = toast.mX;
             }
 
-            int gravity = getReflactField("com.android.internal.R$integer", "config_toastDefaultGravity");
+            int y = getReflactField("com.android.internal.R$dimen", "toast_y_offset");
 
-            if (y == -1) {
-                params.gravity = Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;
+            if(toast.mY != -1) {
+                params.y = toast.mY;
             } else {
-                params.gravity = toast.context.getResources().getInteger(gravity);
+                if (y == -1) {
+                    params.y = dpToPixel(toast.context, 64);
+                } else {
+                    params.y = toast.context.getResources().getDimensionPixelOffset(y);
+                }
+            }
+
+
+
+            int gravity = toast.mGravity;
+            if(gravity != -1) {
+                params.gravity = gravity;
+                if ((gravity & Gravity.HORIZONTAL_GRAVITY_MASK) == Gravity.FILL_HORIZONTAL) {
+                    params.horizontalWeight = 1.0f;
+                }
+                if ((gravity & Gravity.VERTICAL_GRAVITY_MASK) == Gravity.FILL_VERTICAL) {
+                    params.verticalWeight = 1.0f;
+                }
+            } else {
+                gravity = getReflactField("com.android.internal.R$integer", "config_toastDefaultGravity");
+                if (gravity == -1) {
+                    params.gravity = Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;
+                } else {
+                    params.gravity = toast.context.getResources().getInteger(gravity);
+                }
+            }
+
+            if(toast.mVerticalMargin != -1) {
+                params.verticalMargin = toast.mVerticalMargin;
+            }
+            if(toast.mHorizontalMargin != -1) {
+                params.horizontalMargin = toast.mHorizontalMargin;
             }
 
             manger.addView(view, params);
@@ -178,6 +207,27 @@ public class NotificationManagerService {
             clearDirtyToasts(toast.context);
         }
     }
+
+
+    public void cancelToast(SimpleToast toast) {
+        synchronized (mToastQueue) {
+                int index = -1;
+                for(int i = 0;i<mToastQueue.size();i++) {
+                    if(mToastQueue.get(i) == toast) {
+                        index = i;
+                        break;
+                    }
+                }
+
+                if (index >= 0) {
+                    SimpleToast record = mToastQueue.remove(index);
+                    hide(record);
+                } else {
+
+                }
+            }
+    }
+
 
     public void hide(SimpleToast toast) {
         try {

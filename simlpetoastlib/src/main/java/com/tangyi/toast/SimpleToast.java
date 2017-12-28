@@ -5,6 +5,8 @@ import android.app.AppOpsManager;
 import android.app.Application;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
+import android.content.res.Configuration;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Toast;
 
@@ -20,16 +22,24 @@ public class SimpleToast {
     public Context context;
     public android.widget.Toast toast;
     public View view;
+    public int mGravity = -1;
+    public int mX = -1;
+    public int mY = -1;
+    public float mHorizontalMargin = -1;
+    public float mVerticalMargin = -1;
 
-    public static final int LENGTH_SHORT = NotificationManagerService.SHORT_DELAY;
-    public static final int LENGTH_LONG = NotificationManagerService.LONG_DELAY;
+    public static final int LENGTH_SHORT = Toast.LENGTH_SHORT;
+    public static final int LENGTH_LONG = Toast.LENGTH_LONG;
 
     private static final String CHECK_OP_NO_THROW = "checkOpNoThrow";
     private static final String OP_POST_NOTIFICATION = "OP_POST_NOTIFICATION";
     private static int checkNotification = 0;
 
+    public SimpleToast(Context context) {
+        this(context,"",LENGTH_SHORT);
+    }
 
-    public SimpleToast(Context context, String message, int duration) {
+    private SimpleToast(Context context, String message, int duration) {
         this.context = context;
         this.toast = toast;
         if(context instanceof Application)
@@ -67,9 +77,7 @@ public class SimpleToast {
         }
     }
 
-    public void setText(CharSequence s){
-            toast.setText(s);
-    }
+
 
     private static boolean isNotificationEnabled(Context context){
         if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT){
@@ -93,6 +101,138 @@ public class SimpleToast {
             return false;
         }
     }
+
+
+    public int getGravity() {
+        if(systemEnable) {
+            return toast.getGravity();
+        } else {
+            return mGravity;
+        }
+    }
+
+    /**
+     * Return the X offset in pixels to apply to the gravity's location.
+     */
+    public int getXOffset() {
+        if(systemEnable) {
+            return toast.getXOffset();
+        } else {
+            return mX;
+        }
+    }
+
+    /**
+     * Return the Y offset in pixels to apply to the gravity's location.
+     */
+    public int getYOffset() {
+        if(systemEnable) {
+            return toast.getYOffset();
+        } else {
+            return mY;
+        }
+    }
+
+    /**
+     * Return the horizontal margin.
+     */
+    public float getHorizontalMargin() {
+        return mHorizontalMargin;
+    }
+
+    /**
+     * Return the vertical margin.
+     */
+    public float getVerticalMargin() {
+        return mVerticalMargin;
+    }
+
+
+    /**
+     * Return the view.
+     * @see #setView
+     */
+    public View getView() {
+        return toast.getView();
+    }
+
+
+    public void setText(int resId) {
+        setText(context.getText(resId));
+    }
+
+    public void setText(CharSequence s){
+        toast.setText(s);
+    }
+
+    /**
+     * Set the location at which the notification should appear on the screen.
+     * @see android.view.Gravity
+     * @see #getGravity
+     */
+    public void setGravity(int gravity, int xOffset, int yOffset) {
+        if(systemEnable) {
+           toast.setGravity(gravity,xOffset,yOffset);
+        } else {
+            mGravity = gravity;
+            mX = xOffset;
+            mY = yOffset;
+        }
+    }
+
+    public void cancel() {
+        if(systemEnable) {
+            toast.cancel();
+        } else {
+            NotificationManagerService.getInstance().cancelToast(this);
+        }
+    }
+
+
+    /**
+     * Set how long to show the view for.
+     * @see #LENGTH_SHORT
+     * @see #LENGTH_LONG
+     */
+    public void setDuration( int duration) {
+        toast.setDuration(duration);
+    }
+
+    /**
+     * Return the duration.
+     *
+     */
+
+    public int getDuration() {
+        return toast.getDuration();
+    }
+
+
+    /**
+     * Set the margins of the view.
+     *
+     * @param horizontalMargin The horizontal margin, in percentage of the
+     *        container width, between the container's edges and the
+     *        notification
+     * @param verticalMargin The vertical margin, in percentage of the
+     *        container height, between the container's edges and the
+     *        notification
+     */
+    public void setMargin(float horizontalMargin, float verticalMargin) {
+        mHorizontalMargin = horizontalMargin;
+        mVerticalMargin = verticalMargin;
+    }
+
+    /**
+     * Set the view to show.
+     * @see #getView
+     */
+    public void setView(View view) {
+        toast.setView(view);
+    }
+
+
+
 
     @Override
     public boolean equals(Object o) {
