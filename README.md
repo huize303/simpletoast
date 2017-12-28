@@ -1,1 +1,1 @@
-解决android通知被禁用toast无法显示问题，参照NotificationManagerService编写
+解决android通知被禁用toast无法显示问题，参照NotificationManagerService编写,支持自定义view
