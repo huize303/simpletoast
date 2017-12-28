@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
 
-import com.tangyi.toast.NotificationManagerService;
+import com.tangyi.widget.NotificationManagerService;
 
 /**
  * Created by tangyi on 2017/12/27.

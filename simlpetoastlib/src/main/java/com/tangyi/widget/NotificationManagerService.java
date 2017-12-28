@@ -1,17 +1,14 @@
-package com.tangyi.toast;
+package com.tangyi.widget;
 
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.PixelFormat;
-import android.os.Binder;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewCompat;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import java.lang.reflect.Field;
 import java.util.LinkedList;
@@ -36,9 +33,9 @@ public class NotificationManagerService {
 
     private static Handler mHandler;
     private WindowManager manger;
-    private List<SimpleToast> mToastQueue = new LinkedList<>();
+    private List<Toast> mToastQueue = new LinkedList<>();
 
-    private SimpleToast displayingToast;
+    private Toast displayingToast;
 
     public static synchronized NotificationManagerService getInstance() {
         if (instance == null) {
@@ -51,7 +48,7 @@ public class NotificationManagerService {
         mHandler = new WorkerHandler();
     }
 
-    private void handleTimeout(SimpleToast record) {
+    private void handleTimeout(Toast record) {
 
         synchronized (mToastQueue) {
             int index = mToastQueue.indexOf(record);
@@ -62,10 +59,10 @@ public class NotificationManagerService {
     }
 
     void cancelToastLocked(int index) {
-        SimpleToast record = mToastQueue.get(index);
+        Toast record = mToastQueue.get(index);
 
         hide(record);
-        SimpleToast lastToast = mToastQueue.remove(index);
+        Toast lastToast = mToastQueue.remove(index);
         if (mToastQueue.size() > 0) {
             // Show the next one. If the callback fails, this will remove
             // it from the list, so don't assume that the list hasn't changed
@@ -74,7 +71,7 @@ public class NotificationManagerService {
         }
     }
 
-    public void enqueueToast(SimpleToast simperToast) {
+    public void enqueueToast(Toast simperToast) {
 
         synchronized (mToastQueue) {
             int index = 0;
@@ -93,7 +90,7 @@ public class NotificationManagerService {
     }
 
     public void showNextToastLocked() {
-        SimpleToast record = mToastQueue.get(0);
+        Toast record = mToastQueue.get(0);
         if (record != null) {
             show(record);
             scheduleTimeoutLocked(record);
@@ -114,9 +111,9 @@ public class NotificationManagerService {
             hide(displayingToast);
         }
 
-        List<SimpleToast> list = mToastQueue;
-        List<SimpleToast> removeList = new LinkedList<>();
-        for (SimpleToast simperToast : list) {
+        List<Toast> list = mToastQueue;
+        List<Toast> removeList = new LinkedList<>();
+        for (Toast simperToast : list) {
             if (context == simperToast.context) {
                 removeList.add(simperToast);
             }
@@ -129,14 +126,14 @@ public class NotificationManagerService {
         }
     }
 
-    private void scheduleTimeoutLocked(SimpleToast record) {
+    private void scheduleTimeoutLocked(Toast record) {
         mHandler.removeCallbacksAndMessages(record);
         Message m = Message.obtain(mHandler, MESSAGE_TIMEOUT, record);
-        long delay = record.toast.getDuration() == Toast.LENGTH_LONG ? LONG_DELAY : SHORT_DELAY;
+        long delay = record.toast.getDuration() == android.widget.Toast.LENGTH_LONG ? LONG_DELAY : SHORT_DELAY;
         mHandler.sendMessageDelayed(m, delay);
     }
 
-    public void show(SimpleToast toast) {
+    public void show(Toast toast) {
 
         try {
             View view = toast.toast.getView();
@@ -209,7 +206,7 @@ public class NotificationManagerService {
     }
 
 
-    public void cancelToast(SimpleToast toast) {
+    public void cancelToast(Toast toast) {
         synchronized (mToastQueue) {
                 int index = -1;
                 for(int i = 0;i<mToastQueue.size();i++) {
@@ -220,7 +217,7 @@ public class NotificationManagerService {
                 }
 
                 if (index >= 0) {
-                    SimpleToast record = mToastQueue.remove(index);
+                    Toast record = mToastQueue.remove(index);
                     hide(record);
                 } else {
 
@@ -229,7 +226,7 @@ public class NotificationManagerService {
     }
 
 
-    public void hide(SimpleToast toast) {
+    public void hide(Toast toast) {
         try {
             if (toast.view != null && ViewCompat.isAttachedToWindow(toast.view)) {
                 WindowManager manger = (WindowManager) toast.context.getSystemService(Context.WINDOW_SERVICE);
@@ -270,7 +267,7 @@ public class NotificationManagerService {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case MESSAGE_TIMEOUT:
-                    handleTimeout((SimpleToast) msg.obj);
+                    handleTimeout((Toast) msg.obj);
                     break;
             }
         }

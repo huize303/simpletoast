@@ -1,21 +1,16 @@
-package com.tangyi.toast;
+package com.tangyi.widget;
 
-import android.app.Activity;
 import android.app.AppOpsManager;
 import android.app.Application;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
-import android.content.res.Configuration;
-import android.view.Gravity;
 import android.view.View;
-import android.widget.Toast;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.net.IDN;
 
 
-public class SimpleToast {
+public class Toast {
 
     private boolean systemEnable;
 
@@ -28,18 +23,18 @@ public class SimpleToast {
     public float mHorizontalMargin = -1;
     public float mVerticalMargin = -1;
 
-    public static final int LENGTH_SHORT = Toast.LENGTH_SHORT;
-    public static final int LENGTH_LONG = Toast.LENGTH_LONG;
+    public static final int LENGTH_SHORT = android.widget.Toast.LENGTH_SHORT;
+    public static final int LENGTH_LONG = android.widget.Toast.LENGTH_LONG;
 
     private static final String CHECK_OP_NO_THROW = "checkOpNoThrow";
     private static final String OP_POST_NOTIFICATION = "OP_POST_NOTIFICATION";
     private static int checkNotification = 0;
 
-    public SimpleToast(Context context) {
+    public Toast(Context context) {
         this(context,"",LENGTH_SHORT);
     }
 
-    private SimpleToast(Context context, String message, int duration) {
+    private Toast(Context context, String message, int duration) {
         this.context = context;
         this.toast = toast;
         if(context instanceof Application)
@@ -56,17 +51,17 @@ public class SimpleToast {
     }
 
 
-    private SimpleToast(Context context, int idRes, int duration) {
+    private Toast(Context context, int idRes, int duration) {
         this(context,context.getResources().getString(idRes),duration);
 
     }
 
 
-    public static SimpleToast makeText(Context context, String message, int duration) {
-        return new SimpleToast(context,message,duration);
+    public static Toast makeText(Context context, String message, int duration) {
+        return new Toast(context,message,duration);
     }
-    public static SimpleToast makeText(Context context, int resId, int duration) {
-        return new SimpleToast(context,resId,duration);
+    public static Toast makeText(Context context, int resId, int duration) {
+        return new Toast(context,resId,duration);
     }
 
     public void show() {
@@ -239,7 +234,7 @@ public class SimpleToast {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        SimpleToast that = (SimpleToast) o;
+        Toast that = (Toast) o;
 
         return context.equals(that.context);
 

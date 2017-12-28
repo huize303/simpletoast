@@ -3,13 +3,10 @@ package com.tangyi.simpletoast;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 
-import com.tangyi.toast.SimpleToast;
+import com.tangyi.widget.Toast;
 
 import java.util.Random;
 
@@ -31,7 +28,7 @@ public class Activity_1 extends Activity {
             public void onClick(View v) {
                 for(int i = 0;i<10;i++) {
                     int time = (i%2 == 0) ? Toast.LENGTH_LONG: Toast.LENGTH_SHORT;
-                    SimpleToast.makeText(Activity_1.this, "Activity_1" + new Random().nextLong(), time).show();
+                    Toast.makeText(Activity_1.this, "Activity_1" + new Random().nextLong(), time).show();
                 }
             }
         });
