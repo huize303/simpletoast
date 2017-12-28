@@ -11,7 +11,10 @@ import com.tangyi.widget.Toast;
 import java.util.ArrayList;
 import java.util.Random;
 
-
+/**
+ * Created by tangyi on 2017/12/26.
+ *
+ */
 
 public class Activity_2 extends Activity {
 

@@ -169,8 +169,6 @@ public class NotificationManagerService {
                 }
             }
 
-
-
             int gravity = toast.mGravity;
             if(gravity != -1) {
                 params.gravity = gravity;
@@ -219,8 +217,6 @@ public class NotificationManagerService {
                 if (index >= 0) {
                     Toast record = mToastQueue.remove(index);
                     hide(record);
-                } else {
-
                 }
             }
     }

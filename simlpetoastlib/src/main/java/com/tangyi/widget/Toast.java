@@ -9,7 +9,10 @@ import android.view.View;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-
+/**
+ * Created by tangyi on 2017/12/26.
+ *
+ */
 public class Toast {
 
     private boolean systemEnable;
