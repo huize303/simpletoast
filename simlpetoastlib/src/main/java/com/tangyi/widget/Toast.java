@@ -229,22 +229,4 @@ public class Toast {
         toast.setView(view);
     }
 
-
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Toast that = (Toast) o;
-
-        return context.equals(that.context);
-
-    }
-
-    @Override
-    public int hashCode() {
-        return context.hashCode();
-    }
 }
